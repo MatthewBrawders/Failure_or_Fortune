@@ -1,0 +1,1 @@
+Making a character creation ECS system using electron and a mongo db backend..probably
