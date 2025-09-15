@@ -164,13 +164,27 @@ export default function Journey() {
                     <stop offset="0%" stop-color="rgba(139,124,246,0.6)"/>
                     <stop offset="100%" stop-color="rgba(23,198,179,0.5)"/>
                   </linearGradient>
+                  <linearGradient id="tailGrad" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="rgba(139,124,246,0.95)"/>
+                    <stop offset="100%" stop-color="rgba(23,198,179,0.75)"/>
+                  </linearGradient>
+                  <radialGradient id="tailTipGrad" cx="50%" cy="50%" r="60%">
+                    <stop offset="0%" stop-color="rgba(245,215,110,0.95)"/>
+                    <stop offset="100%" stop-color="rgba(139,124,246,0.95)"/>
+                  </radialGradient>
                 </defs>
 
                 <g id="part-wings" data-part="wings" class="part special-part-svg" tabindex="0">
                   <rect x="60" y="160" width="120" height="100" fill="transparent" class="click-area"/>
                   <rect x="220" y="160" width="120" height="100" fill="transparent" class="click-area"/>
-                  <path d="M200 200 L100 140 L180 180 Z" class="special-part-svg"/>
-                  <path d="M200 200 L300 140 L220 180 Z" class="special-part-svg"/>
+                  <path d="M200 230 L100 170 L180 210 Z" class="special-part-svg">
+                    <animateTransform attributeName="transform" type="rotate"
+                      values="0 200 230;-7 200 230;0 200 230;7 200 230;0 200 230" dur="2.6s" repeatCount="indefinite"/>
+                  </path>
+                  <path d="M200 230 L300 170 L220 210 Z" class="special-part-svg">
+                    <animateTransform attributeName="transform" type="rotate"
+                      values="0 200 230;7 200 230;0 200 230;-7 200 230;0 200 230" dur="2.6s" repeatCount="indefinite"/>
+                  </path>
                 </g>
 
                 <rect x="170" y="200" width="60" height="120" rx="12" fill="url(#cloth)" stroke="rgba(139,124,246,0.4)" stroke-width="2"/>
@@ -198,14 +212,14 @@ export default function Journey() {
                 </g>
 
                 <g id="part-left_arm" data-part="left_arm" class="part limb-part" tabindex="0">
-                  <rect x="145" y="220" width="30" height="140" fill="transparent" class="click-area"/>
-                  <rect x="150" y="220" width="20" height="120" rx="10" class="limb-part"/>
-                  <ellipse cx="160" cy="345" rx="12" ry="6" fill="rgba(101,67,33,0.9)"/>
+                  <rect x="145" y="220" width="30" height="125" fill="transparent" class="click-area"/>
+                  <rect x="150" y="220" width="20" height="118" rx="10" class="limb-part"/>
+                  <ellipse cx="160" cy="345" rx="14.5" ry="6" fill="rgba(101,67,33,0.9)"/>
                 </g>
                 <g id="part-right_arm" data-part="right_arm" class="part limb-part" tabindex="0">
-                  <rect x="225" y="220" width="30" height="140" fill="transparent" class="click-area"/>
-                  <rect x="230" y="220" width="20" height="120" rx="10" class="limb-part"/>
-                  <ellipse cx="240" cy="345" rx="12" ry="6" fill="rgba(101,67,33,0.9)"/>
+                  <rect x="225" y="220" width="30" height="125" fill="transparent" class="click-area"/>
+                  <rect x="230" y="220" width="20" height="118" rx="10" class="limb-part"/>
+                  <ellipse cx="240" cy="345" rx="14.5" ry="6" fill="rgba(101,67,33,0.9)"/>
                 </g>
                 
                 <g id="part-left_leg" data-part="left_leg" class="part limb-part" tabindex="0">
@@ -220,16 +234,50 @@ export default function Journey() {
                 </g>
 
                 <g id="part-tail" data-part="tail" class="part" tabindex="0">
-                  <path d="M235 385 C 295 385, 300 355, 265 345" fill="transparent" class="click-area"/>
-                  <rect x="235" y="375" width="58" height="12" rx="6" class="tail-fill" transform="rotate(-18 235 381)"/>
-                  <circle cx="292" cy="352" r="7" class="tail-fill"/>
+                  <rect x="230" y="360" width="110" height="70" fill="transparent" class="click-area"/>
+                  <g class="tail-swing">
+                    <path class="tail-stroke" d="M235 408 C 272 408, 305 396, 332 384"/>
+                    <circle class="tail-tip" cx="332" cy="384" r="7"/>
+                    <animateTransform attributeName="transform" type="rotate"
+                      values="-18 235 408;8 235 408;-18 235 408" dur="2.6s" repeatCount="indefinite"/>
+                  </g>
                 </g>
               </svg>
             </div>
           </div>
+
+          <div class="holy-particles" id="holyParticles"></div>
         </div>
       </div>
     </section>
   `;
+}
+
+if (typeof window !== 'undefined') {
+  (function(){
+    function initHoly(){
+      const root = document.getElementById('holyParticles');
+      if (!root || root.dataset.init) return false;
+      root.dataset.init = '1';
+      const COUNT = 28;
+      for (let i = 0; i < COUNT; i++) {
+        const p = document.createElement('span');
+        p.className = 'holy-mote';
+        p.style.setProperty('--x', (4 + Math.random() * 92) + '%');
+        p.style.setProperty('--size', (1 + Math.random() * 2) + 'px');
+        p.style.setProperty('--delay', (-Math.random() * 25) + 's');
+        p.style.setProperty('--dur', (42 + Math.random() * 46) + 's');
+        p.style.setProperty('--dx1', ((Math.random() * 2 - 1) * 18) + 'px');
+        p.style.setProperty('--dx2', ((Math.random() * 2 - 1) * 26) + 'px');
+        p.style.setProperty('--dx3', ((Math.random() * 2 - 1) * 18) + 'px');
+        root.appendChild(p);
+      }
+      return true;
+    }
+    if (!initHoly()){
+      const mo = new MutationObserver(() => { if (initHoly()) mo.disconnect(); });
+      mo.observe(document.body || document.documentElement, { childList: true, subtree: true });
+    }
+  })();
 }
 // pages/journey.js end
