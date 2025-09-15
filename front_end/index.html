@@ -1,0 +1,37 @@
+<!-- index.html start -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Myth Maker</title>
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self';
+                 script-src 'self';
+                 style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+                 font-src 'self' https://fonts.gstatic.com;
+                 img-src 'self' data:;
+                 media-src 'self';">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-right">
+      <button id="settingsToggle" class="settings-btn" type="button">Settings</button>
+      <button id="minBtn" class="win-btn" type="button" aria-label="Minimize">−</button>
+      <button id="closeBtn" class="win-btn danger" type="button" aria-label="Close">×</button>
+    </div>
+  </header>
+
+  <div id="app"></div>
+
+  <audio id="bgm" src="./fantasy_music.mp3" loop preload="auto"></audio>
+  <audio id="uiClick" src="./button_click.mp3" preload="auto"></audio>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
+<!-- index.html end -->
