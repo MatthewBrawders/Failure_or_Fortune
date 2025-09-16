@@ -280,4 +280,31 @@ if (typeof window !== 'undefined') {
     }
   })();
 }
+
+export function mountJourneyEffects(){
+  const root = document.getElementById('holyParticles');
+  if (!root || root.dataset.init === '1') return; 
+  root.dataset.init = '1';
+
+  const COUNT = 28;
+  for (let i = 0; i < COUNT; i++) {
+    const p = document.createElement('span');
+    p.className = 'holy-mote';
+    p.style.setProperty('--x', (4 + Math.random() * 92) + '%');
+    p.style.setProperty('--size', (1 + Math.random() * 2) + 'px');
+    p.style.setProperty('--delay', (-Math.random() * 25) + 's');
+    p.style.setProperty('--dur', (42 + Math.random() * 46) + 's');
+    p.style.setProperty('--dx1', ((Math.random() * 2 - 1) * 18) + 'px');
+    p.style.setProperty('--dx2', ((Math.random() * 2 - 1) * 26) + 'px');
+    p.style.setProperty('--dx3', ((Math.random() * 2 - 1) * 18) + 'px');
+    root.appendChild(p);
+  }
+}
+
+export function unmountJourneyEffects(){
+  const root = document.getElementById('holyParticles');
+  if (!root) return;
+  root.textContent = '';
+  delete root.dataset.init;
+}
 // pages/journey.js end

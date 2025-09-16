@@ -5,16 +5,26 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Myth Maker</title>
+
+  <!-- CSP tuned for Electron + local assets -->
   <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self';
-                 script-src 'self';
-                 style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-                 font-src 'self' https://fonts.gstatic.com;
-                 img-src 'self' data:;
-                 media-src 'self';">
+        content="
+          default-src 'self' file:;
+          script-src 'self';
+          style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+          font-src 'self' https://fonts.gstatic.com;
+          img-src 'self' data: blob: file:;
+          media-src 'self' blob: file:;
+          connect-src 'self' file:;
+          base-uri 'self';
+          object-src 'none';
+        ">
+
+  <!-- Google Fonts (Cinzel, Cormorant) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Cormorant+Garamond:wght@400;600;700&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="./css/styles.css">
 </head>
 <body>
@@ -28,9 +38,11 @@
 
   <div id="app"></div>
 
-  <audio id="bgm" src="./fantasy_music.mp3" loop preload="auto"></audio>
-  <audio id="uiClick" src="./button_click.mp3" preload="auto"></audio>
+  <!-- Local audio (allowed by media-src 'self' blob: file:) -->
+  <audio id="bgm" src="./assets/fantasy_music.mp3" loop preload="auto"></audio>
+  <audio id="uiClick" src="./assets/button_click.mp3" preload="auto"></audio>
 
+  <!-- Use ES modules so import.meta.url works in your renderer files -->
   <script type="module" src="./app.js"></script>
 </body>
 </html>

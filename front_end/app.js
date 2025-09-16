@@ -1,7 +1,7 @@
 // app.js start
-import Home from './pages/home.js';
+import Home, { mountHomeEffects } from './pages/home.js';
 import Settings from './pages/settings.js';
-import Journey from './pages/journey.js';
+import Journey, { mountJourneyEffects } from './pages/journey.js';
 
 const routes = { '/': Home, '/settings': Settings, '/journey': Journey };
 let lastNonSettings = '/';
@@ -15,10 +15,9 @@ function currentPath() {
 function playClick() {
   const el = document.getElementById('uiClick');
   if (!el) return;
-  // tie SFX loudness roughly to music volume (or set a fixed number like 0.6)
   const vol = (getSavedVolume() ?? 0.5) * 0.9;
   try {
-    const snd = el.cloneNode(true);   // allows rapid consecutive clicks
+    const snd = el.cloneNode(true);
     snd.volume = Math.max(0, Math.min(1, vol));
     snd.play().catch(() => {});
     snd.addEventListener('ended', () => snd.remove());
@@ -26,7 +25,6 @@ function playClick() {
 }
 
 function setupUiClickSfx() {
-  // play on any "button-like" click (opt-out with data-mute-click)
   document.addEventListener('click', (e) => {
     const el = e.target.closest('button, .button, [role="button"], .win-btn, .settings-btn, a[href^="#/"]');
     if (!el || el.hasAttribute('data-mute-click')) return;
@@ -176,10 +174,19 @@ function render() {
 
   if (path === '/settings') app.innerHTML = `<div class="card">${html}</div>`;
   else app.innerHTML = html;
+  if (path === '/') {
+    try { mountHomeEffects(); } catch {}
+  }
+  if (path === '/journey') {
+    try { mountJourneyEffects(); } catch {}
+  }
   const isJourney = path === '/journey';
   document.documentElement.classList.toggle('no-scroll', isJourney);
   document.body.classList.toggle('no-scroll', isJourney);
   document.body.classList.toggle('route-journey', isJourney);
+
+  const isHome = path === '/';
+  document.body.classList.toggle('route-home', isHome);
 
   const btn = document.getElementById('settingsToggle');
   if (btn) {

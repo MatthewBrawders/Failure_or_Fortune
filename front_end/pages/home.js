@@ -1,39 +1,14 @@
 // pages/home.js start
+const coinImg = new URL('../assets/FoF_coin.png', import.meta.url).toString();
+
 export default function Home() {
   return `
     <div class="wrap card">
       <div class="hero">
-        <h1 class="brand"><span class="gild">MYTH MAKER</span></h1>
+        <h1 class="brand">FAILURE or FORTUNE</h1>
 
-        <div class="sigil" aria-hidden="true">
-          <svg viewBox="0 0 120 120" width="96" height="96" role="img" aria-label="MW Monogram">
-            <defs>
-              <linearGradient id="mwGrad" x1="0" x2="0" y1="0" y2="1">
-                <stop offset="0%" stop-color="#fff7c5"/>
-                <stop offset="60%" stop-color="#f0d98a"/>
-                <stop offset="100%" stop-color="#b28a3a"/>
-              </linearGradient>
-              <filter id="mwGlow">
-                <feGaussianBlur stdDeviation="1.5" result="b"/>
-                <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-              </filter>
-            </defs>
-
-            <!-- outer dotted ring -->
-            <circle class="ring" cx="60" cy="60" r="46"
-                    fill="none" stroke="rgba(245,215,110,.35)"
-                    stroke-width="2" stroke-dasharray="6 8"/>
-
-            <!-- MW monogram -->
-            <g filter="url(#mwGlow)" stroke-linecap="round" stroke-linejoin="round" fill="none">
-              <!-- M -->
-              <path d="M34 80 L46 40 L60 60 L74 40 L86 80"
-                    stroke="url(#mwGrad)" stroke-width="3"/>
-              <!-- W -->
-              <path d="M34 44 L48 84 L60 60 L72 84 L86 44"
-                    stroke="rgba(139,124,246,.9)" stroke-width="2.6"/>
-            </g>
-          </svg>
+        <div class="coin-wrap">
+          <img src="${coinImg}" alt="FoF Coin" class="coin-img" />
         </div>
 
         <p class="subtitle">Forge characters, weave tales, and let fate decide.</p>
@@ -42,6 +17,95 @@ export default function Home() {
         </div>
       </div>
     </div>
+
+    <div class="embers" id="embers"></div>
+    <div class="embers-omni" id="embersOmni"></div>
   `;
+}
+
+export function mountHomeEffects(){
+  const R = (min,max)=> Math.random()*(max-min)+min;
+
+  document.body.classList.add('route-home');
+
+  const start = document.querySelector('.home-cta a[href="#/journey"]');
+  if (start && !start.dataset.walkInit){
+    start.dataset.walkInit = '1';
+    start.addEventListener('click', (e)=>{
+      e.preventDefault();
+      e.stopImmediatePropagation();  
+      const body = document.body;
+      const card = document.querySelector('.wrap.card');
+
+      body.classList.add('walking');
+      card?.classList.add('hide-ui');
+
+    setTimeout(()=>{
+      body.classList.remove('walking');
+      body.classList.remove('route-home');
+      window.location.hash = '#/journey';
+    }, 1600);
+    }, { capture: true });          
+  }
+
+
+  const el = document.getElementById('embers');
+  if (el && !el.dataset.init){
+    el.dataset.init = '1';
+    const N = 28;
+    for(let i=0;i<N;i++){
+      const d = document.createElement('div');
+      d.className = 'ember';
+      d.style.setProperty('--x', R(0,100).toFixed(2)+'vw');
+      d.style.setProperty('--s', R(2,4).toFixed(2)+'px');
+      d.style.setProperty('--t', R(26,42).toFixed(2)+'s');
+      d.style.setProperty('--d', R(0,8).toFixed(2)+'s');
+      d.style.setProperty('--dx1', R(-8,8).toFixed(2)+'vw');
+      d.style.setProperty('--dx2', R(-10,10).toFixed(2)+'vw');
+      d.style.setProperty('--dx3', R(-8,8).toFixed(2)+'vw');
+      el.appendChild(d);
+    }
+  }
+
+  const root = document.getElementById('embersOmni');
+  if (root && !root.dataset.init){
+    root.dataset.init = '1';
+    const dirs = ['n','s','e','w','ne','nw','se','sw'];
+    const M = 40;
+    for(let i=0;i<M;i++){
+      const d = document.createElement('span');
+      d.className = 'spark';
+      const dir = dirs[Math.floor(Math.random()*dirs.length)];
+      d.dataset.dir = dir;
+      d.style.setProperty('--s', (Math.random()*2+1.5).toFixed(2)+'px');
+      d.style.setProperty('--t', (Math.random()*28+42).toFixed(2)+'s');
+      d.style.setProperty('--d', (-Math.random()*8).toFixed(2)+'s');
+
+      let sx, sy;
+      if(dir==='n'){ sx=(Math.random()*100)+'vw'; sy='100vh'; }
+      else if(dir==='s'){ sx=(Math.random()*100)+'vw'; sy='0vh'; }
+      else if(dir==='e'){ sx='0vw'; sy=(Math.random()*100)+'vh'; }
+      else if(dir==='w'){ sx='100vw'; sy=(Math.random()*100)+'vh'; }
+      else if(dir==='ne'){ sx='0vw'; sy='100vh'; }
+      else if(dir==='nw'){ sx='100vw'; sy='100vh'; }
+      else if(dir==='se'){ sx='0vw'; sy='0vh'; }
+      else { sx='100vw'; sy='0vh'; }
+      d.style.setProperty('--sx', sx);
+      d.style.setProperty('--sy', sy);
+      d.style.setProperty('--dx', ((Math.random()*20)-10).toFixed(2)+'vw');
+      d.style.setProperty('--dy', ((Math.random()*20)-10).toFixed(2)+'vh');
+      root.appendChild(d);
+    }
+  }
+}
+
+export function unmountHomeEffects(){
+  for (const id of ['embers','embersOmni']){
+    const n = document.getElementById(id);
+    if (n) { n.textContent = ''; delete n.dataset.init; }
+  }
+  document.body.classList.remove('route-home','walking');
+  const card = document.querySelector('.wrap.card');
+  card?.classList.remove('hide-ui');
 }
 // pages/home.js end
